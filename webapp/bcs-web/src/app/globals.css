@@ -1,0 +1,271 @@
+/* src/app/globals.css - Theme and Font Size Scale v4 Setup */
+@import "tailwindcss";
+
+:root, [data-theme="light"] {
+  /* Base Background & Text */
+  --background: #fafafa;
+  --foreground: #1a1a2e; /* near-black, not pure black */
+  
+  /* Color Palette roles */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #f5f3ff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #d97706;
+  
+  /* Layout borders/cards */
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --card-foreground: #1a1a2e;
+  --muted: #f3f4f6;
+  --muted-foreground: #4b5563;
+  
+  /* Overrides for Tailwind classes in Light Mode */
+  --tw-white: #ffffff;
+  --tw-slate-50: #fafafa;
+  --tw-slate-100: #f3f4f6;
+  --tw-slate-200: #e5e7eb;
+  --tw-slate-300: #d1d5db;
+  --tw-slate-800: #1e1b4b;
+  --tw-slate-900: #1a1a2e;
+  --tw-gray-50: #f9fafb;
+  --tw-gray-100: #f3f4f6;
+  --tw-gray-200: #e5e7eb;
+  --tw-gray-500: #6b7280;
+  --tw-gray-600: #4b5563;
+  --tw-gray-900: #111827;
+
+  /* Font size scale defaults (Default: 16px) */
+  --base-font-size: 16px;
+  --base-line-height: 1.55;
+}
+
+[data-theme="dark"] {
+  /* Base Background & Text */
+  --background: #121212; /* not pure black */
+  --foreground: #e8e8e8; /* off-white, not pure white */
+  
+  /* Color Palette roles */
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --primary-light: #1e1b4b;
+  --success: #4ade80;
+  --error: #f87171;
+  --warning: #fbbf24;
+  
+  /* Layout borders/cards */
+  --border: #242424;
+  --card: #1e1e1e;
+  --card-foreground: #e8e8e8;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  
+  /* Overrides for Tailwind classes in Dark Mode */
+  --tw-white: #1e1e1e;
+  --tw-slate-50: #121212;
+  --tw-slate-100: #242424;
+  --tw-slate-200: #2d2d2d;
+  --tw-slate-300: #404040;
+  --tw-slate-800: #e8e8e8;
+  --tw-slate-900: #ffffff;
+  --tw-gray-50: #18181b;
+  --tw-gray-100: #27272a;
+  --tw-gray-200: #3f3f46;
+  --tw-gray-500: #9ca3af;
+  --tw-gray-600: #a1a1aa;
+  --tw-gray-900: #e8e8e8;
+}
+
+[data-theme="sepia"] {
+  /* Base Background & Text */
+  --background: #f4ecd8;
+  --foreground: #3a2e1e;
+  
+  /* Color Palette roles */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eae0c9;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #d97706;
+  
+  /* Layout borders/cards */
+  --border: #e4d8bc;
+  --card: #fdfaf2;
+  --card-foreground: #3a2e1e;
+  --muted: #eaddc3;
+  --muted-foreground: #65543c;
+  
+  /* Overrides for Tailwind classes in Sepia Mode */
+  --tw-white: #fdfaf2;
+  --tw-slate-50: #f4ecd8;
+  --tw-slate-100: #eaddc3;
+  --tw-slate-200: #e4d8bc;
+  --tw-slate-300: #d6c6a4;
+  --tw-slate-800: #3a2e1e;
+  --tw-slate-900: #2b2114;
+  --tw-gray-50: #f9f5eb;
+  --tw-gray-100: #eaddc3;
+  --tw-gray-200: #e4d8bc;
+  --tw-gray-500: #65543c;
+  --tw-gray-600: #7d684c;
+  --tw-gray-900: #3a2e1e;
+}
+
+/* Font Size Scales */
+[data-font-size="small"] {
+  --base-font-size: 14px;
+}
+[data-font-size="default"] {
+  --base-font-size: 16px;
+}
+[data-font-size="large"] {
+  --base-font-size: 18px;
+}
+[data-font-size="xlarge"] {
+  --base-font-size: 21px;
+}
+
+@theme {
+  /* Font families */
+  --font-sans: var(--font-inter), var(--font-bengali), system-ui, sans-serif;
+  --font-bengali: var(--font-bengali), system-ui, sans-serif;
+  
+  /* Colors mapping to our variables */
+  --color-primary-50: var(--primary-light);
+  --color-primary-100: var(--primary-light);
+  --color-primary-500: var(--primary);
+  --color-primary-600: var(--primary-hover);
+  --color-primary-700: var(--primary-hover);
+  
+  --color-success-500: var(--success);
+  --color-error-500: var(--error);
+  --color-warning-500: var(--warning);
+
+  /* Mapping common Tailwind colors to theme-aware variables */
+  --color-white: var(--tw-white);
+  --color-slate-50: var(--tw-slate-50);
+  --color-slate-100: var(--tw-slate-100);
+  --color-slate-200: var(--tw-slate-200);
+  --color-slate-300: var(--tw-slate-300);
+  --color-slate-800: var(--tw-slate-800);
+  --color-slate-900: var(--tw-slate-900);
+  --color-slate-950: var(--foreground);
+  --color-gray-50: var(--tw-gray-50);
+  --color-gray-100: var(--tw-gray-100);
+  --color-gray-200: var(--tw-gray-200);
+  --color-gray-500: var(--tw-gray-500);
+  --color-gray-600: var(--tw-gray-600);
+  --color-gray-900: var(--tw-gray-900);
+  --color-gray-955: var(--foreground);
+  --color-gray-950: var(--foreground);
+
+  /* Custom glow variables */
+  --shadow-glow-green: 0 0 15px rgba(22, 163, 74, 0.25);
+  --shadow-glow-red: 0 0 15px rgba(220, 38, 49, 0.25);
+  --shadow-glow-gold: 0 0 15px rgba(217, 119, 6, 0.35);
+  --shadow-glow-indigo: 0 0 20px rgba(79, 70, 229, 0.25);
+}
+
+/* Custom styles */
+html {
+  font-size: var(--base-font-size);
+  line-height: var(--base-line-height);
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  transition: background-color 0.2s ease, color 0.2s ease, font-size 0.2s ease;
+}
+
+body {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans);
+}
+
+.font-bengali {
+  font-family: var(--font-bengali);
+}
+
+/* RTL support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Premium micro-interactions & float animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float 3.2s ease-in-out infinite;
+}
+
+/* Glassmorphism Preset */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.08);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Custom animations helper classes */
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2000ms;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3000ms;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4000ms;
+}
