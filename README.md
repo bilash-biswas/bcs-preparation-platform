@@ -183,3 +183,83 @@ docker compose logs -f
 ```
 
 ---
+
+## 🚀 AWS EC2 Deployment & CI/CD Pipeline
+
+The project is configured for automated continuous deployment (CD) on an **AWS EC2 Instance** using **GitHub Actions** and **Nginx**.
+
+### 1. ⚙️ GitHub Actions CI/CD Setup
+The CD pipeline automatically builds and restarts the Docker stack on EC2 whenever changes are pushed to the `main` branch.
+
+To enable the pipeline, configure the following secrets in your GitHub repository (**Settings > Secrets and variables > Actions**):
+* `SSH_HOST`: Your EC2 Instance's Public IP address (e.g., `184.192.0.141`).
+* `SSH_USERNAME`: Your EC2 user (typically `ubuntu`).
+* `SSH_KEY`: The contents of your private SSH key (`.pem` file) used to authenticate with EC2.
+
+The workflow details are defined in [.github/workflows/deploy.yml](file:///.github/workflows/deploy.yml).
+
+---
+
+### 2. 🔀 Nginx Reverse Proxy Setup (Host Machine)
+Nginx runs directly on the EC2 host to route external HTTP traffic to the appropriate Docker containers:
+* `/` ➡️ Next.js WebApp (`http://127.0.0.1:3000`)
+* `/api/` ➡️ Django REST API (`http://127.0.0.1:8000`)
+* `/admin/` ➡️ Django Admin Panel (`http://127.0.0.1:8000`)
+* `/static/` ➡️ Django Static Assets / Admin styling (`http://127.0.0.1:8000` via WhiteNoise)
+* `/ws/` ➡️ Django Channels WebSockets (`http://127.0.0.1:8000` supporting WS upgrade)
+
+#### To configure or update Nginx on EC2:
+Run the following commands in your EC2 instance SSH terminal:
+```bash
+# Navigate to the code directory
+cd /home/ubuntu/bcs-preparation-platform
+
+# Pull the latest changes
+git pull origin main
+
+# Copy the server configuration to Nginx sites-available
+sudo cp nginx.conf /etc/nginx/sites-available/bcs-platform
+
+# Enable the site configuration by symlinking it
+sudo ln -sf /etc/nginx/sites-available/bcs-platform /etc/nginx/sites-enabled/
+
+# Remove Nginx default index route (if exists)
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Verify syntax and restart Nginx
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+---
+
+### 3. 🧹 EC2 Storage & Docker Volume Management
+Because standard builds cache heavy intermediate layers, small EC2 server disks (such as 8GB SSDs) can run out of space. 
+
+* The `docker-compose.yml` is optimized for production by omitting local source code/`node_modules` volume mounts.
+* The CI/CD pipeline automatically runs a docker prune during each release.
+* **Manual Disk Clean Command** (run this if disk gets close to 100%):
+  ```bash
+  docker system prune -a --volumes -f
+  ```
+
+---
+
+### 4. 🪵 Useful Operations Commands (EC2 SSH)
+* **Check running containers**:
+  ```bash
+  docker ps
+  ```
+* **View backend logs**:
+  ```bash
+  docker logs bcs_api --tail 50 -f
+  ```
+* **View frontend webapp logs**:
+  ```bash
+  docker logs bcs_webapp --tail 50 -f
+  ```
+* **Check Nginx proxy routing logs**:
+  ```bash
+  sudo tail -f /var/log/nginx/error.log
+  ```
+
