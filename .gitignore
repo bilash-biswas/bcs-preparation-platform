@@ -49,3 +49,7 @@ ios/Pods/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Mobile project folders (deploy only api and webapp to AWS)
+bcs_pre_app/
+bcs_pre_app_expo/
