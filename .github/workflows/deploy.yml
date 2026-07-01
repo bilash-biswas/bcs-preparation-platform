@@ -61,6 +61,10 @@ jobs:
             
             # Restart docker containers with clean compilation
             docker-compose down
+            
+            # Clean up unused/dangling docker images, containers, and build cache to free disk space
+            docker system prune -af
+            
             docker-compose up -d --build
             
             # Wait for database to initialize and accept connections
