@@ -15,7 +15,7 @@ import { Eye, EyeOff, Loader2, UserPlus, AlertCircle } from 'lucide-react';
 const registerSchema = z.object({
   username: z.string().min(3, 'ইউজারনাম অন্তত ৩ অক্ষরের হতে হবে'),
   email: z.string().email('সঠিক ইমেইল দিন'),
-  password: z.string().min(6, 'পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে'),
+  password: z.string().min(8, 'পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে'),
   password_confirm: z.string().min(1, 'পাসওয়ার্ড নিশ্চিত করা আবশ্যক'),
   user_type: z.enum(['student', 'teacher']),
   phone: z.string().optional(),
@@ -66,7 +66,28 @@ export const RegisterForm: React.FC = () => {
       toast.success(response.message || 'সফলভাবে নিবন্ধন সম্পন্ন হয়েছে!');
       router.push('/dashboard');
     } catch (error: any) {
-      const errorMessage = error.message || 'নিবন্ধন করতে ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।';
+      let errorMessage = 'নিবন্ধন করতে ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।';
+      if (error.response?.data) {
+        const data = error.response.data;
+        if (typeof data === 'object') {
+          const errorsList = Object.entries(data)
+            .map(([field, value]) => {
+              const fieldLabel = field === 'username' ? 'ইউজারনাম' : 
+                                 field === 'email' ? 'ইমেইল' : 
+                                 field === 'password' ? 'পাসওয়ার্ড' : 
+                                 field === 'password_confirm' ? 'পাসওয়ার্ড নিশ্চিতকরণ' : field;
+              const details = Array.isArray(value) ? value.join(', ') : String(value);
+              return `${fieldLabel}: ${details}`;
+            });
+          if (errorsList.length > 0) {
+            errorMessage = errorsList.join('\n');
+          }
+        } else if (typeof data === 'string') {
+          errorMessage = data;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -160,7 +181,7 @@ export const RegisterForm: React.FC = () => {
             id="register-password"
             type={showPassword ? 'text' : 'password'}
             {...register('password')}
-            placeholder="কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন"
+            placeholder="কমপক্ষে ৮ অক্ষরের পাসওয়ার্ড দিন"
             disabled={loading}
             className={`h-11 rounded-xl border pl-4 pr-11 text-sm w-full text-gray-900 transition-all focus:border-green-600 focus:ring-2 focus:ring-green-600/10 ${
               errors.password ? 'border-red-500 bg-red-50/10 focus:ring-red-500/10' : 'border-gray-300'
