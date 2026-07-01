@@ -6,30 +6,39 @@ A comprehensive preparation platform designed to help candidates prepare for the
 
 ## 🏗️ Architecture Overview
 
+The platform is deployed on **AWS EC2** using **Docker Compose** containers and managed with a **GitHub Actions** CI/CD pipeline. An **Nginx** reverse proxy runs on the EC2 host to route requests.
+
 The system is split into three main components:
-1. **Backend API (`/api`)**: Built with Django and Django REST Framework, utilizing PostgreSQL as the primary database, Redis for caching/websockets, Daphne for ASGI runtime, and Celery for background queues.
-2. **Next.js WebApp (`/webapp/bcs-web`)**: A modern, high-performance web interface built with Next.js 15, Turbopack, and Tailwind CSS.
-3. **Expo Mobile App (`/bcs_pre_app_expo`)**: A cross-platform mobile application built using React Native, Expo SDK 56, Redux Toolkit, and NativeWind v4 styling.
+1. **Host Nginx Proxy**: Routes incoming traffic on Port 80 (HTTP) to correct containers.
+2. **Backend API (`/api`)**: Built with Django 5.2, utilizing PostgreSQL as the primary database, Redis for caching/websockets, Daphne for ASGI runtime, and Celery for background queues.
+3. **Next.js WebApp (`/webapp/bcs-web`)**: Next.js 15 client-side application running on Port 3000.
+4. **Expo Mobile App (`/bcs_pre_app_expo`)**: React Native client using Expo SDK 56, Redux Toolkit, and NativeWind v4.
 
 ```mermaid
 graph TD
-    subgraph Clients
-        Web[Next.js Webapp - Port 3000]
-        Mobile[React Native / Expo App]
+    subgraph External Clients
+        WebClient[User Web Browser]
+        MobileClient[React Native / Expo Client]
     end
 
-    subgraph Backend Services
-        API[Django ASGI Server - Port 8000]
-        Celery[Celery Background Workers]
+    subgraph AWS EC2 Instance Host
+        Nginx[Nginx Reverse Proxy - Port 80]
+        
+        subgraph Docker Compose Containers
+            Web[Next.js Webapp - Port 3000]
+            API[Django ASGI Server - Port 8000]
+            Celery[Celery Workers]
+            DB[(PostgreSQL Database)]
+            Cache[(Redis Cache & WebSockets)]
+        end
     end
 
-    subgraph Databases & Cache
-        DB[(PostgreSQL Database)]
-        Cache[(Redis Cache & Channel Layers)]
-    end
-
-    Web -->|HTTP / WebSockets| API
-    Mobile -->|HTTP / WebSockets| API
+    WebClient -->|HTTP Port 80 /| Nginx
+    MobileClient -->|HTTP Port 80 /api/| Nginx
+    
+    Nginx -->|Proxy Pass /| Web
+    Nginx -->|Proxy Pass /api/, /admin/, /static/| API
+    
     API --> DB
     API --> Cache
     Celery --> Cache
